@@ -86,31 +86,10 @@ class ChoicePercentage extends JPanel {
 	private JSlider[] Mins_;
 	private Asset[] assets_;
 	private ParentNotify onFinish_; 
-	private boolean underChanging_ = false;
 	private JSlider setChangeListener(int n, int value, int extend, int min, int max, boolean isMax) {
 		DefaultBoundedRangeModel model = new DefaultBoundedRangeModel( value, extend, min, max);
 		model.setValueIsAdjusting(false);
-		//class
-		
-		/*class Listener implements ChangeListener {
-			Listener(int n, boolean isMax) {
-				num = n;
-				isMax_ = isMax;
-			}
-			@Override
-			public void stateChanged(ChangeEvent e) {
-				//System.out.println("stateChanged> " + e);
-				if (ChoicePercentage.this.underChanging_) {
-				} else {
-					ChoicePercentage.this.underChanging_ = true;
-					ChoicePercentage.this.underChanging_ = false;
-				}
-				
-			}
-			private int num;
-			private boolean isMax_;
-		}
-		model.addChangeListener(new Listener(n, isMax));*/
+
 		return new JSlider(model);
 	}
 }
@@ -144,7 +123,7 @@ public class PortfolioFrame extends JPanel implements ActionListener {
 		if (cmd.equals(addAssetCmd_)) {
 			AssetsWindow PortfolioTable_ = new AssetsWindow((JFrame) SwingUtilities.windowForComponent(this),false);
 			SortedSet<Asset> assets = PortfolioTable_.getSelected();
-			if (assets != null) {
+			if (assets != null && assets.size() > 1) {
 				this.remove(addButton_);
 				addButton_ = null;
 				this.repaint();
