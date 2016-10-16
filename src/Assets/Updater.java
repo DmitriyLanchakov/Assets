@@ -3,6 +3,10 @@ package Assets;
 import java.util.ArrayList;
 
 public class Updater extends Thread {
+	/**
+	 * Update fetchers data from Internet
+	 */
+	
 	public Updater() {
 		super.start();
 	}

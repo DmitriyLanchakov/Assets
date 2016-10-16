@@ -6,10 +6,20 @@ import java.util.TreeMap;
 import Assets.Asset;
 
 public class CalculatedAsset {
-
+	/**
+	 * Class to describe the result portfolio
+	 * 
+	 * @param average average return per day of the portfolio  
+	 * @param sigma Sigma (Standard deviation, risk metric) of the portfolio
+	 * @param assets array of assets are in the portfolio
+	 * @param percentages array of percentage value for each asset in the portfoliov
+	 * @param averages array of average return volume for each asset in the portfolio
+	 * @param sigmas array of sigma (risk metric) for each asset in the portfolio
+	 * @param values map of values of the portfolio for dates (
+	 *   value for the date means changes(in times) after the previous date)
+	 */
 	public CalculatedAsset(double average, double sigma, Asset assets[], Double percentages[], 
 			Double averages[], Double sigmas[], TreeMap<Date, Double> values) {
-		// TODO Auto-generated constructor stub
 		resAverage_ = Math.rint(average * ScaleFactor) / ScaleFactor;
 		resSigma_ = Math.rint(sigma * ScaleFactor) / ScaleFactor;
 		int len = assets.length; 
@@ -45,26 +55,72 @@ public class CalculatedAsset {
 		//System.out.println("Values[0]=" + values_[0] + " Values[" + (i-1) + "]=" + values_[i-1]);
 	}
 	
+	/**
+	 * Returns array of the assets contained in the portfolio 
+	 * @return array of the assets in portfolio
+	 */
 	public Asset[] getAssets() {return assets_;}
+	/**
+	 * Returns array of average return for the assets in portfolio
+	 * @return array of average returns
+	 */
 	public double[] getAverages() {return averages_;}
+	/**
+	 * Returns array of sigmas for the assets in portfolio
+	 * @return arrays of sigmas
+	 */
 	public double[] getSigmas() {return sigmas_;}
+	/**
+	 * Returns average return of the portfolio
+	 * @return average return
+	 */
 	public double getResultAverageReturn() {return resAverage_;}
+	/**
+	 * Returns sigma of the portfolio
+	 * @return
+	 */
 	public double getResultSigma() {return resSigma_;}
+	/**
+	 * Returns value for number num in values tree 
+	 * @param num the number
+	 * @return the value for the number num
+	 */
 	public double getValueForNumber(final int num) {
 		int n = num;
 		if (n >= values_.length)
 			n = values_.length-1;
 		return values_[n];
 	}
+	/**
+	 * Returns date for number num in values tree
+	 * @param num the number
+	 * @return the date for the number num
+	 */
 	public Date getDateForNumber(final int num) {
 		int n = num;
 		if (n >= dates_.length)
 			n = dates_.length-1;
 		return dates_[n];
 	}
+	/**
+	 * Returns the minimum value of the portfolio
+	 * @return the minimum value
+	 */
 	public double getMinValue() {return min_;}
+	/**
+	 * Returns the maximum value of the portfolio
+	 * @return the maximum value
+	 */
 	public double getMaxValue() {return max_;}
+	/**
+	 * Returns the count of the values of the portfolio
+	 * @return the count of the values
+	 */
 	public int getCount() {return values_.length;}
+	/**
+	 * Returns array of the percentages of each asset in the portfolio 
+	 * @return array of the percentages 
+	 */
 	public double[] getPercents() {return  percentages_;}
 	private Date dates_[];
 	private double values_[];

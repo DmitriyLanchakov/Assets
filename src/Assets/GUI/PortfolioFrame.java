@@ -20,9 +20,15 @@ interface ParentNotify {
 }
 class ChoicePercentage extends JPanel {
 	/**
-	 * 
+	 * Class to show percentage changing frame 
 	 */
 	private static final long serialVersionUID = -3418548838113949472L;
+	
+	/**
+	 * Create an instance
+	 * @param assets list of available assets in the portfolio
+	 * @param onFinish parent instance to be invoked when finished
+	 */
 	ChoicePercentage(Asset[] assets, ParentNotify onFinish) {
 		super();
 		super.setLayout(new BorderLayout());
@@ -68,18 +74,30 @@ class ChoicePercentage extends JPanel {
 		super.setSize(panel_.getSize());
 		super.setVisible(true);
 	}
+	/**
+	 * Returns array contains minimum available values for assets
+	 * @return array of minimum values
+	 */
 	public int[] getMins() {
 		int[] mins = new int[Mins_.length];
 		for (int i = 0; i < Mins_.length; i++)
 			mins[i] = Mins_[i].getValue();
 		return mins;
 	}
+	/**
+	 * Returns array contains maximum available values for assets
+	 * @return array of maximum values
+	 */
 	public int[] getMaxs() {
 		int[] mins = new int[Maxs_.length];
 		for (int i = 0; i < Maxs_.length; i++)
 			mins[i] = Maxs_[i].getValue();
 		return mins;
 	}
+	/**
+	 * Returns list of assets
+	 * @return list of assets
+	 */
 	public Asset[] getAssets() {return assets_;}
 	private JPanel panel_ = null;
 	private JSlider[] Maxs_;
@@ -97,10 +115,13 @@ class ChoicePercentage extends JPanel {
 public class PortfolioFrame extends JPanel implements ActionListener {
 
 	/**
-	 * 
+	 * Class to show frames containing different portfolios
 	 */
 	private static final long serialVersionUID = -5901477241771247766L;
 
+	/**
+	 * Create new frame	
+	 */
 	public PortfolioFrame() {
 		super();
 		addButton_ = new JButton(addAssetCmd_);
@@ -108,6 +129,10 @@ public class PortfolioFrame extends JPanel implements ActionListener {
 		this.add(addButton_);
 	}
 
+	/**
+	 * Paints the graphic
+	 * @param g graphic context
+	 */
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
@@ -117,6 +142,10 @@ public class PortfolioFrame extends JPanel implements ActionListener {
 			paintGraph(g);
 		}
 	}
+	/**
+	 * Invoked on user event
+	 * @param arg0 an event
+	 */
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		String cmd = arg0.getActionCommand();

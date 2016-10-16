@@ -1,7 +1,10 @@
 package Assets.MCIEX;
 
 public class MCIEXGovBondsFetcher extends MCIEXFetcher {
-
+	/**
+	 * Fetches data for assets in Government Bonds section on MCIEX
+	 */
+	
 	public MCIEXGovBondsFetcher() {
 		super(_assets, _type);
 	}
@@ -12,10 +15,16 @@ public class MCIEXGovBondsFetcher extends MCIEXFetcher {
 
 	private final static String _assets = "MCIEX";
 	private final static String _type = "GovBonds";
+	/**
+	 * @return "MCIEX"
+	 */
 	@Override
 	public String GetSource() {
 		return _assets;
 	}
+	/**
+	 * @return "GovBonds"
+	 */
 	@Override
 	public String GetType() {
 		return _type;

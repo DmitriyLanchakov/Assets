@@ -1,6 +1,9 @@
 package Assets;
 
 public final class ThreadFetch implements Runnable {
+	/**
+	 * Update fetcher in different thread
+	*/
 	public ThreadFetch(Fetcher fetcher, Asset asset) {
 		this.fetcher = fetcher;
 		this.asset = asset;

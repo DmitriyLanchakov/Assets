@@ -15,11 +15,18 @@ import org.xml.sax.helpers.DefaultHandler;
 import org.xml.sax.helpers.XMLReaderFactory;
 
 public class MCIEXXMLParser extends DefaultHandler {
-
+	/**
+	 * Parses data gotten from MCIEX in XML format
+	 * @param reader data reader (object that reads data from MCIEX site (www.moex.com))
+	 */
 	public MCIEXXMLParser(java.io.Reader reader) {
 		super();
 		process(reader);
 	}
+	/**
+	 * Starts the parser
+	 * @param reader data reader
+	 */
 	public void process(java.io.Reader reader) {
 		_map = null;
 		try {
@@ -34,6 +41,15 @@ public class MCIEXXMLParser extends DefaultHandler {
 			e.printStackTrace();
 		}
 	}
+	/**
+	 * Processes the element in XML tree. Stores processed elements data to TreeMap<Date, Double>
+	 * where Double represents the price of the element for the Date
+	 * @param uri the URI
+	 * @param name the local name
+	 * @param qName the qualified (prefixed) name
+	 * @param atts the attributes for the element
+	 */
+	@Override
     public void startElement(String uri, String name,
 			      String qName, Attributes atts) {
    		if (name.equalsIgnoreCase("row")) {
@@ -56,6 +72,10 @@ public class MCIEXXMLParser extends DefaultHandler {
 			}
    		}
     }
+	/**
+	 * Returns parsed data
+	 * @return map of asset's prices located by date growing order
+	 */
     public TreeMap<Date,Double> get() {
     	return _map;
     }

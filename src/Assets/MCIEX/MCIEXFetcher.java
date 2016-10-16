@@ -11,6 +11,10 @@ import Assets.DB.InsertAssetCb;
 import Assets.DB.ReadAssetValueCb;
 
 class DBReaderHelper extends Thread {
+	/**
+	 * Read assets from DB in parallel
+	 * @param a asset to be road
+	 */
 	public DBReaderHelper(Asset a) {
 		super.start();
 		a_ = a;
@@ -31,27 +35,50 @@ class DBReaderHelper extends Thread {
 }
 
 public abstract class MCIEXFetcher implements Fetcher {
+	/**
+	 * Parent class to manage (read, delete, update...) assets which Source is MCIEX 
+	 * Some methods are specified  in child
+	 */
+	
 	protected MCIEXFetcher(String assets, String asset) {
 		DBConnector db = DBConnector.Get();
 		db.createAssetsTable(assets);
 		db.createAssetTable(assets + asset);
 	}
+	/**
+	 * Fills fetcher by assets
+	 * @param assets asset's array to fill this fetcher
+	 */
 	public MCIEXFetcher(SortedSet<Asset> assets) {
 		set__assets(assets);
 	}
+	/**
+	 * Gets assets from this fetcher
+	 * @return the assets
+	 */
 	@Override
 	public SortedSet<Asset> GetAssets() {
 		return __assets;
 	}
+	/**
+	 * Replaces (or creates) fetcher's assets
+	 * @param assets assets that fills this fetcher
+	 */
 	public void set__assets(SortedSet<Asset> assets) {
 		this.__assets = assets;
 	}
+	/** Add asset into this fetcher
+	 * @param asset the assets
+	 */
 	@Override
 	public void add(Asset asset) {
 		asset.setSource(GetSource());
 		asset.setType_(GetType());
 		__assets.add(asset);
 	}
+	/**
+	 * Updates volumes of all assets in this fetcher
+	 */
 	@Override
 	public void update() { 
 		for(Asset asset : __assets) {
@@ -59,12 +86,16 @@ public abstract class MCIEXFetcher implements Fetcher {
 			th.start();
 		}
 	}
+	/**
+	 * Updates volumes for the asset
+	 * @param asset the asset to be updated
+	 * @return true - updated successfully, false - otherwise
+	 */
 	@Override
 	public boolean update(Asset asset) throws Exception {
 		boolean res = false;
 		String url = getURLPattern() + asset.secid() + ".xml";
 		Date begin = GetLastDate(asset), end = Calendar.getInstance().getTime();
-		//String begin = "1998-01-01", end = DBConnector.Date2DB(Calendar.getInstance().getTime());
 		url = appendDate(url, begin, end);
 		System.out.println("URL to fetch: " + url);
 		URL u;
@@ -83,11 +114,9 @@ public abstract class MCIEXFetcher implements Fetcher {
 				addAsset2DB(asset);
 			updateAsset(asset, map);	
 		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			throw new IOException("Bad URL " + e);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			throw e;
 		} catch (Exception e) {
@@ -103,6 +132,11 @@ public abstract class MCIEXFetcher implements Fetcher {
 	protected String appendDate(String pattern, Date begin, Date end) {
 		return appendDate(pattern, DBConnector.Date2DB(begin), DBConnector.Date2DB(end));
 	}
+	/**
+	 * Gets the date of the latest record for the asset
+	 * @param name name of the asset
+	 * @return The date of the latest record, 01.01.2000 if no record
+	 */
 	public Date GetLastDate(Asset name) {
 		return GetLastDate(name.DBType(), name.secid());
 	}
@@ -120,6 +154,10 @@ public abstract class MCIEXFetcher implements Fetcher {
 		if (__assets != null)
 		__assets.remove(asset);
 	}
+	/**
+	 * Deletes the asset
+	 * @param name the asset to be deleted
+	 */
 	@Override
 	public final void DeleteAsset(Asset name) {
 		this.del(name);
@@ -142,6 +180,9 @@ public abstract class MCIEXFetcher implements Fetcher {
 		DBConnector db = DBConnector.Get();
 		db.deleteAsset(GetSource(), asset.secid());
 	}
+	/**
+	 * Synchronizes asset's tree with DB records
+	 */
 	@Override
 	public final void sync() throws Exception {
 		if (__assets.size() == 0) {
@@ -176,9 +217,19 @@ public abstract class MCIEXFetcher implements Fetcher {
 			}
 		});
 	}
+	/**
+	 * Returns the Source of the fetcher's instance
+	 * This method should be implemented by child
+	 * @return string contains the source name
+	 */
 	@Override
 	abstract public String GetSource();
 	@Override
+	/**
+	 * Return the type of the fetchers's instance
+	 * This method should be implemented by child
+	 * @return string contains the type name
+	 */
 	abstract public String GetType();
 	abstract protected String getURLPattern();
 	private SortedSet<Asset> __assets = new TreeSet<>();

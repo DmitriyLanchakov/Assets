@@ -1,7 +1,10 @@
 package Assets.MCIEX;
 
 public class MCIEXCorpBondsFetcher extends MCIEXFetcher {
-
+	/**
+	* Fetches data for assets in Corporative Bonds section on MCIEX
+	*/
+	
 	public MCIEXCorpBondsFetcher() {
 		super(_assets, _type);
 	}
@@ -12,10 +15,16 @@ public class MCIEXCorpBondsFetcher extends MCIEXFetcher {
 
 	private final static String _assets = "MCIEX";
 	private final static String _type = "CorpBonds";
+	/**
+	 * @return "MCIEX"
+	 */
 	@Override
 	public String GetSource() {
 		return _assets;
 	}
+	/**
+	 * @return "CorpBonds" 
+	 */
 	@Override
 	public String GetType() {
 		return _type;

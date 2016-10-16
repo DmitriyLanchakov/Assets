@@ -1,6 +1,10 @@
 package Assets.MCIEX;
 
 public class MCIEXETFFetcher extends MCIEXFetcher {
+	/**
+	 * Fetches data for assets in ETF section on MCIEX
+	 */
+	
 	public MCIEXETFFetcher() {
 		super(_assets, _type);
 	}
@@ -11,10 +15,16 @@ public class MCIEXETFFetcher extends MCIEXFetcher {
 
 	private final static String _assets = "MCIEX";
 	private final static String _type = "ETF";
+	/**
+	 * @return "MCIEX"
+	 */
 	@Override
 	public String GetSource() {
 		return _assets;
 	}
+	/**
+	 * @return "ETF"
+	 */
 	@Override
 	public String GetType() {
 		return _type;

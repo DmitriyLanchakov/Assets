@@ -19,9 +19,15 @@ import Assets.*;
 
 class ATable extends JTable implements ListSelectionListener {
 	/**
-	 * 
+	 * Class to show graphic information about asset in table
 	 */
 	private static final long serialVersionUID = -2971805234825945852L;
+	
+	/**
+	 * Create a table contains information about assets
+	 * @param model Table model @see DefaultTableModel
+	 * @param parent caller instance
+	 */
 	public ATable(DefaultTableModel model, AssetsWindow parent) {
 		super(model);
 		super.putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
@@ -80,19 +86,30 @@ class ATable extends JTable implements ListSelectionListener {
 		new setForCombo(this, assetsSources_, 2);
 		new setForCombo(this, assetsTypes_, 3);
 	}
+	/**
+	 * Checks the possibility to edit a table's cell
+	 * @param row row of the cell
+	 * @param column column of the cell
+	 * @return true if cell at position [row,column] may be edited, false otherwise
+	 */
 	@Override
 	public boolean isCellEditable(int row, int column) {
 		if(editable_ && row==getRowCount()-1)
 			return true;
-		/*if(super.getColumnName(column).equals("Count"))
-			return true;*/
 		return false;
 	}
+	/**
+	 * Allows or disallows edit mode
+	 * @param b if true - cells of this table can be editable 
+	 */
 	public void setEditable(boolean b) {
 		editable_ = b;
 	}
+	/**
+	 * Invoked on ListSelection event
+	 * @param event an event
+	 */
 	public void valueChanged(ListSelectionEvent event) {
-		//System.out.println("value Changed " + event);
 		super.valueChanged(event);
 		if (editable_)
 			return;
@@ -105,6 +122,10 @@ class ATable extends JTable implements ListSelectionListener {
 			marked_ = null;
 		}
 	}
+	/**
+	 * Returns an array of assets selected by user
+	 * @return array of selected assets
+	 */
 	public SortedSet<Asset> getSelected() {
 		if (marked_ == null)
 			return null;
@@ -113,7 +134,14 @@ class ATable extends JTable implements ListSelectionListener {
 			as.add(assets_.get(i));
 		return as;
 	}
+	/**
+	 * Adds an asset
+	 * @param a asset to be added
+	 */
 	public void addAsset(Asset a) {assets_.add(a);}
+	/**
+	 * Deletes selected assets
+	 */
 	public void deleteSelectedAssets() {
 		if (marked_ == null)
 			return;
@@ -127,16 +155,24 @@ class ATable extends JTable implements ListSelectionListener {
 	
 	private boolean editable_ = false;
 	private int[] marked_ = null;
-	private /*static*/ ArrayList<Asset> assets_ = new ArrayList<>();
-	private /*static*/ SortedSet<String> assetsSources_ = new TreeSet<>();
-	private /*static*/ SortedSet<String> assetsTypes_ = new TreeSet<>();
+	private ArrayList<Asset> assets_ = new ArrayList<>();
+	private SortedSet<String> assetsSources_ = new TreeSet<>();
+	private SortedSet<String> assetsTypes_ = new TreeSet<>();
 	private AssetsWindow parent_;
 	private DefaultTableModel model_;
 }
 
 public class AssetsWindow extends JDialog implements WindowListener{
-
+	/**
+	 * Class provides GUI to show and manipulate (adding,deleting,selecting) assets 
+	 */
+	
 	private static final long serialVersionUID = 1L;
+	/**
+	 * Create an object
+	 * @param parent parent class instance
+	 * @param fromMain true if it's created from main window, false otherwise
+	 */
 	public AssetsWindow(JFrame parent, boolean fromMain) {
 		super(parent, "Manage Portfolio", Dialog.ModalityType.DOCUMENT_MODAL);
 	
@@ -156,6 +192,12 @@ public class AssetsWindow extends JDialog implements WindowListener{
 		this.addWindowListener(this);
 		this.setVisible(true);
 	}
+	/**
+	 * Creates buttons at bottom. Window shows 3 button ("add", "delete", "exit") if invoked during
+	 * assets management operation, 2 button during select operation
+	 * @param panel panel instance where buttons should be created
+	 * @param fromMain true if invoked from main window, false if invoked from add/delete operation
+	 */
 	private void initButtons(JPanel panel, boolean fromMain) {
 		if (fromMain) {
 			
@@ -204,15 +246,15 @@ public class AssetsWindow extends JDialog implements WindowListener{
 	}
 	
 	protected void onButtonPressed(boolean OkCancel) {
-		// TODO Auto-generated method stub
 		if (!OkCancel) //Cancel pressed
 			table_.clearSelected();
 		this.setVisible(false);
 		this.dispose();
 	}
-
+	/**
+	 * Method invoked on Add Asset event
+	 */
 	public void addAsset() {
-		
 		JViewport vp = scrollPane_.getViewport();
 		vp.scrollRectToVisible(getBounds());
 				
@@ -225,6 +267,9 @@ public class AssetsWindow extends JDialog implements WindowListener{
 		cmdBtn_.setText(finishCmd);
 	}
 	
+	/**
+	 * Method invoked on finish assets addition
+	 */
 	public void finishAsset() {
 		table_.setEditable(false);
 		cmdBtn_.setText(addCmd);
@@ -258,6 +303,10 @@ public class AssetsWindow extends JDialog implements WindowListener{
 			System.out.println("Colmn n " +  n + " has value " + values.get(n));
 		}
 	}
+	/**
+	 * Sets delete button enable or disable
+	 * @param enable true if enable 
+	 */
 	public void enableDeleteButton(boolean  enable) {
 		if (delBtn_ != null)
 			delBtn_.setEnabled(enable);
@@ -280,10 +329,6 @@ public class AssetsWindow extends JDialog implements WindowListener{
 	private final String delCmd = "Delete Asset(s)";
 	private final String finishCmd = "Finish";
 	private JScrollPane scrollPane_;
-	/*@Override
-	public void windowStateChanged(WindowEvent arg0) {
-		System.out.println("WindowStateChanged> " + arg0);
-	}*/
 
 	@Override
 	public void windowActivated(WindowEvent e) {

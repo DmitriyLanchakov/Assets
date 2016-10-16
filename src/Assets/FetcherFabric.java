@@ -9,6 +9,15 @@ import Assets.MCIEX.MCIEXGovBondsFetcher;
 import Assets.MCIEX.MCIEXSharesFetcher;
 
 public final class FetcherFabric {
+	/**
+	 * Class to manage available fetcher
+	 */
+	/**
+	 * Gets a fetcher
+	 * @param source Source of the fetcher
+	 * @param type Type of the fetcher
+	 * @return the fetcher associated with given source and type
+	 */
 	public static Fetcher get(String source, String type) {
 		if (fetchers_ == null)
 			init();
@@ -31,6 +40,10 @@ public final class FetcherFabric {
 		set(new MCIEXCorpBondsFetcher());
 		set(new MCIEXGovBondsFetcher());
 	}
+	/**
+	 * Gets list of available fetchers
+	 * @return list of fetchers
+	 */
 	public static ArrayList<Fetcher> Fetchers() {
 		if (fetchers_ == null)
 			init();

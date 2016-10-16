@@ -22,7 +22,12 @@ import Assets.DB.DBConnector;
 
 public class DBConfigWindow extends JDialog implements ActionListener  {
 	private static final long serialVersionUID = -6865512180545109624L;
-	DBConfigWindow(JFrame parent) {
+	
+	/**
+	 * Class to show GUI to configure DB connection
+	 * @param parent
+	 */
+	public DBConfigWindow(JFrame parent) {
 		super(parent, "Config DataBase", Dialog.ModalityType.DOCUMENT_MODAL);
 		this.setLayout(new BorderLayout());
 		
@@ -75,16 +80,18 @@ public class DBConfigWindow extends JDialog implements ActionListener  {
 		this.doLayout();
 		this.setVisible(true);
 	}
-private
-	JFormattedTextField _userText;
-	JPasswordField _passwordText;
-	JFormattedTextField _hostText;
-	JFormattedTextField _portText;
-	static final String _OK = "OK";
-	static final String _CANCEL = "Cancel";
+	private	JFormattedTextField _userText;
+	private JPasswordField _passwordText;
+	private JFormattedTextField _hostText;
+	private JFormattedTextField _portText;
+	private static final String _OK = "OK";
+	private static final String _CANCEL = "Cancel";
+	/**
+	 * Invoked on Action event
+	 * @param e an event
+	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
 		String cmd = e.getActionCommand();
 		if(cmd.equals(_OK)) {
 			String user = _userText.getText();

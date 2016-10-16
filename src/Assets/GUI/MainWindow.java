@@ -9,14 +9,17 @@ import javax.swing.*;
 public class MainWindow extends JFrame implements ActionListener {
 
 	/**
-	 * 
+	 * Class to show main window
 	 */	
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * Create window instance
+	 * @param title the title of a window
+	 */
 	public MainWindow(String title) {
 		super(title);
 		this.init();
-		// TODO Auto-generated constructor stub
 	}
 
 	private void init() {
@@ -59,6 +62,10 @@ public class MainWindow extends JFrame implements ActionListener {
 		setVisible(true);
 	}
 
+	/**
+	 * Invoked on user selection event
+	 * @param arg0 the event
+	 */
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		if (PortfolioTable_ != null) {
@@ -67,7 +74,6 @@ public class MainWindow extends JFrame implements ActionListener {
 			PortfolioTable_ = null;
 		}
 		String cmd = arg0.getActionCommand();
-		//System.out.println("Cmd=" + cmd);
 		if (cmd.equals(updateCmd)) {
 			new Assets.Updater();	
 			return;
@@ -81,7 +87,6 @@ public class MainWindow extends JFrame implements ActionListener {
 				try {
 					f.sync();
 				} catch (Exception e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 		}

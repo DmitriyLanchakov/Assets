@@ -13,18 +13,34 @@ import java.util.TreeMap;
 import Assets.Asset;
 
 class MathHelper {
+	/**
+	 * Calculates the average sum
+	 * @param values to be calculated
+	 * @return average sum
+	 */
 	static final Double CalcAverageSum(Collection<? extends Double> values) {
 		double avgSum = 0.0;
 		for (Double cur : values)
 			avgSum += cur;
 		return avgSum / values.size();
 	}
+	/**
+	 * Calculates the geometric average
+	 * @param values to be calculated
+	 * @return geometric average
+	 */
 	static final Double CalcAverageMult(Collection<? extends Double> values) {
 		double avgMult = 1.0;
 		for (Double cur : values)
 			avgMult *= cur;
 		return Math.pow(avgMult, 1.0 / values.size());
 	}
+	/**
+	 * Calculates the sigma (Standard deviation)
+	 * @param values values to be calculated for the sigma 
+	 * @param average average
+	 * @return the sigma
+	 */
 	static final Double CalcSigma(Collection<? extends Double> values, Double average) {
 		double sigma = 0.0, sum = 0.0;
 		for (Double cur : values) {
@@ -33,12 +49,27 @@ class MathHelper {
 		sigma = sum / (values.size()-1);
 		return Math.sqrt(sigma);
 	}
+	/**
+	 * Calculates the sigma (Standard deviation)
+	 * @param values values to be calculated for the sigma
+	 * @return the sigma
+	 */
 	static final Double CalcSigma(Collection<? extends Double> values) {
 		return CalcSigma(values, CalcAverageSum(values));
 	}
 }	
 
 class CalcAssets {
+	/**
+	 * Class to calculate the sigma and average return for 2 assets
+	 */
+	/**
+	 * 
+	 * @param asset1 values of asset #1
+	 * @param percentage1 percentage of the asset #1
+	 * @param asset2 values of ssset #2
+	 * @param percentage2 percentage of the asset #2
+	 */
 	public CalcAssets (TreeMap<Date, Double> asset1, double percentage1,
 			TreeMap<Date, Double> asset2, double percentage2) {
 		
@@ -61,16 +92,44 @@ class CalcAssets {
 		avgMult_ = MathHelper.CalcAverageMult(result_.values());
 		Sigma_ = MathHelper.CalcSigma(result_.values(), avgSum_);
 	}
+	/**
+	 * Returns sum of percentages of 2 assets
+	 * @return sum of percentages
+	 */
 	public double getPercent() {return percent_;}
+	/**
+	 * Returns average sum for 2 assets
+	 * @return average sum
+	 */
 	public double getAvgSum() {return avgSum_;}
+	/**
+	 * Returns geometric average for 2 asset
+	 * @return geometric average
+	 */
 	public double getAvgMult() {return avgMult_;}
+	/**
+	 * Returns the sigma of 2 assets
+	 * @return the sigma
+	 */
 	public double getSigma() {return Sigma_;}
+	/**
+	 * Returns the map contains the result of 2 assets
+	 * @return the map of result
+	 */
 	public TreeMap<Date, Double> get() {return result_;}
 	private TreeMap<Date, Double> result_ = new TreeMap<>();
 	private double percent_;
 	private Double avgSum_ = null, avgMult_ = null, Sigma_ = null;
 }
+
 class AssetParam implements Comparable<AssetParam> {
+	/**
+	 * Class to calculate the difference of the values of the asset between the closest dates 
+	 * @param a the asset
+	 * @param start start date
+	 * @param minP minimum Percentage 
+	 * @param maxP maximum Percentage
+	 */
 	public AssetParam(Asset a, Date start, double  minP, double maxP) {
 		asset_ = a;
 		if (start == null)
@@ -82,9 +141,17 @@ class AssetParam implements Comparable<AssetParam> {
 		calcDelta();
 		calcAverages();
 	}
+	/**
+	 * Returns the asset which the object calculated for
+	 * @return the asset
+	 */
 	public Asset get() {
 		return asset_;
 	}
+	/**
+	 * Returns the values of delta (delta means the difference between the closest values)
+	 * @return the delta
+	 */
 	public TreeMap<Date, Double> getDelta() {return delta_;}
 	private void calcDelta() {
 		SortedMap<Date, Double> val = asset_.values();
@@ -116,13 +183,45 @@ class AssetParam implements Comparable<AssetParam> {
 	private Date startDate_;
 	private double minPercent_, maxPercent_;
 	private Double avgSum_ = null, avgMult_ = null;
+	/**
+	 * Returns average sum of the asset
+	 * @return average sum
+	 */
 	public double getAvgSum() {return avgSum_;}
+	/**
+	 * Returns the geometric average of the asset
+	 * @return geometric average
+	 */
 	public double getAvgMult() {return avgMult_;}
+	/**
+	 * Returns the sigma (risk) of the asset
+	 * @return
+	 */
 	public double getSigma() {return calcSigma();}
+	/**
+	 * Sets the minimum percentage
+	 * @param p minimum percentage
+	 */
 	public void setMinPercent(double p) {minPercent_ = p;}
+	/**
+	 * Returns the minimum percentage
+	 * @return the minimum percentage
+	 */
 	public double getMinPercent() {return minPercent_;}
+	/**
+	 * Sets the maximum percentage
+	 * @param p maximum percentage
+	 */
 	public void setMaxPercent(double p) {maxPercent_ = p;}
+	/**
+	 * Returns the maximum percentage
+	 * @return the maximum percentage
+	 */
 	public double getMaxPercent() {return maxPercent_;}
+	/**
+	 * Compares to the other asset
+	 * @return -1,0,1 if this asset is less,the same, more than the another asset
+	 */
 	@Override
 	public int compareTo(AssetParam o) {
 		return asset_.compareTo(o.get());
@@ -130,30 +229,62 @@ class AssetParam implements Comparable<AssetParam> {
 }
 
 class ReturnHelper implements Iterable<Integer> {
+	/**
+	 * Class to make storage of assets in the portfolio
+	 * @param ap Asset transformed to AssetParam
+	 * @param p percentage of the asset 
+	 */
 	ReturnHelper(AssetParam ap, Double p) {
 		aps_.add(ap);
 		percents_.add(p);
 	}
+	/**
+	 * Adds the asset (transformed to AssetParam) and the calculation of sigma/average return
+	 * of the previous asset and the current.  
+	 * @param as Calculated parameters (sigma/average return) for the previous and current assets 
+	 * @param ap Current asset (transformed to AssetParam)
+	 * @param p percentage of the asset in result portfolio
+	 */
 	public void put(CalcAssets as, AssetParam ap, Double p) {
 		as_.add(as);
 		aps_.add(ap);
 		percents_.add(p);
 	}
+	/**
+	 * Returns the latest calculated assets
+	 * @return the latest calculated assets
+	 */
 	public CalcAssets getLastCalcAssets() {
 		return as_.get(as_.size()-1);
 	}
+	/**
+	 * Returns the asset (transformed to AssetParam) for index
+	 * @param index the index of the asset
+	 * @return the asset
+	 */
 	public AssetParam getParamFor(int index) {return aps_.get(index);}
+	/**
+	 * Returns the percentage of the asset at index
+	 * @param index the index in the assets array 
+	 * @return the percentage
+	 */
 	public double getPercentageFor(int index) {return percents_.get(index);}
 	private ArrayList<CalcAssets> as_ = new ArrayList<>();
 	private ArrayList<AssetParam> aps_ = new ArrayList<>();
 	private ArrayList<Double> percents_ = new ArrayList<>();
+	/**
+	 * Returns an iterator
+	 * @return the iterator
+	 */
 	@Override
 	public Iterator<Integer> iterator() {
-		// TODO Auto-generated method stub
 		return new InnerIterator();
 	}
 	private class InnerIterator implements Iterator<Integer> {
-
+		/**
+		 * Class to support an iteration operation on outer class
+		 * @see Iterator
+		 */
 		@Override
 		public boolean hasNext() {
 			if (ReturnHelper.this.aps_.size() > cursor &&
@@ -161,7 +292,6 @@ class ReturnHelper implements Iterable<Integer> {
 				return true;
 			return false;
 		}
-
 		@Override
 		public Integer next() {
 			if(this.hasNext()) {
@@ -171,10 +301,8 @@ class ReturnHelper implements Iterable<Integer> {
 			}
 			throw new NoSuchElementException();
 		}
-
 		@Override
 		public void remove() {
-			// TODO Auto-generated method stub
 			throw new UnsupportedOperationException();
 		}
 		private int cursor = 0;
@@ -182,9 +310,17 @@ class ReturnHelper implements Iterable<Integer> {
 }
 
 public class Engine {
-
+	/**
+	 * Class to calculate the best percentages for each assets in portfolio
+	 * The best percentages are calculated by recursive calculation of the previous 
+	 * calculated assets and the current asset
+	 * 
+	 * @param assets array of assets existed in portfolio
+	 * @param mins array of minimum percentages available for the asset in assets array
+	 * @param maxs array of maximum percentages available for the asset in assets array
+	 * @throws NumberFormatException
+	 */
 	public Engine(Asset[] assets, int[] mins, int[] maxs) throws NumberFormatException  {
-		// TODO Auto-generated constructor stub
 		if(assets == null || assets.length < 2)
 			throw new NumberFormatException("No data");
 		minDate_ = calculateMinCommonDate(assets);
@@ -199,13 +335,21 @@ public class Engine {
 			try {
 				res = calcBestPercent(this.assets, 1.0, 0.05);
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		
 		makeReturnedAsset(res);
 	}
+	/**
+	 * Returns the count of assets in the portfolio
+	 * @return count of assets
+	 */
 	public int getAssetsCount() {return assets.size();}
+	/**
+	 * Finds the minimum date exists in all assets
+	 * @param assets array of assets in the portfolio
+	 * @return the minimum date 
+	 */
 	private Date calculateMinCommonDate(Asset[] assets) {
 		@SuppressWarnings("deprecation")
 		Date minD = new Date(100, Calendar.JANUARY, 1);
@@ -240,6 +384,15 @@ public class Engine {
 				averages.toArray(new Double[0]),sigmas.toArray(new Double[0]), 
 				res.getLastCalcAssets().get());
 	}
+	/**
+	 * Recursive calculation of the best percentage for each asset in portfolio
+	 * O(n) = n**n
+	 * @param apl tail of the list of assets
+	 * @param availP max percentage available for the tail
+	 * @param step step of percentage calculation
+	 * @return ReturnHelper contains the list of asset with the best percentage  
+	 * @throws Exception
+	 */
 	protected ReturnHelper calcBestPercent(List<AssetParam> apl, double availP, double step) throws Exception {
 		double maxR = Double.NEGATIVE_INFINITY;//, minS = Double.POSITIVE_INFINITY;
 		List<AssetParam> tail = apl.subList(1, apl.size());
@@ -282,6 +435,10 @@ public class Engine {
 		}
 		return ret;
 	}
+	/**
+	 * Returns the result
+	 * @return the result
+	 */
 	public CalculatedAsset getResult() {return retValues;}
 	private ArrayList<AssetParam> assets = new ArrayList<>();
 	private CalculatedAsset retValues = null;

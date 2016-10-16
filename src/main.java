@@ -13,27 +13,27 @@ public class main {
 	 */
 	public static void main(String[] args) {
 		
-	//DBConnector.Get().createAssetsTable("ASSETS");
+	//Just update the assets data and exit if the programm start with -u
 	if (args.length > 0 && args[0].equals("-u")) { 
 		new Assets.Updater();
 		return;
 	}
 	System.out.println("Start exeecution");
-	//MainWindow  mw = new MainWindow("My window");
+
+	//Create main window
 	Thread th = new Thread(new Runnable() {
 		public void run() {
 			new Assets.GUI.MainWindow("Assets window");
 		}
 	});
+	//Get available assets
 	ArrayList<Fetcher> fetchers = FetcherFabric.Fetchers();
 	for(Fetcher f : fetchers)
 		try {
 			f.sync();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	//SwingUtilities.invokeLater(th);
 	try {
 		SwingUtilities.invokeAndWait(th);
 		th.join();
@@ -44,15 +44,6 @@ public class main {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
 	}
-
-	/*
-		th.start();
-		try {
-			th.join();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}*/
 	System.out.println("Stop exeecution");
 	}
 }
